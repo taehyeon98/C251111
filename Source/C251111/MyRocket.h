@@ -7,6 +7,8 @@
 #include "MyRocket.generated.h"
 
 class UProjectileMovementComponent;
+class UBoxComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class C251111_API AMyRocket : public AActor
@@ -32,4 +34,10 @@ public:
 public:
 	UPROPERTY(BlueprintReadOnly,VisibleAnywhere,Category = Component)
 	TObjectPtr<UProjectileMovementComponent> RocketMove;
+
+	UPROPERTY(BlueprintReadOnly,VisibleAnywhere,Category = Component)
+	TObjectPtr<UBoxComponent> Box;
+
+	UPROPERTY(BlueprintReadOnly,VisibleAnywhere,Category = Component)
+	TObjectPtr<UStaticMeshComponent> Rocket;
 };

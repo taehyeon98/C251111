@@ -73,7 +73,6 @@ void AMyP38::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
 // Called every frame
 void AMyP38::Tick(float DeltaTime)
 {
@@ -91,8 +90,11 @@ void AMyP38::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	// 여기에서 'ETriggerEvent' 열거형 값을 변경하여 원하는 트리거 이벤트를 바인딩할 수 있습니다.
-	Input->BindAction(IA_Fire, ETriggerEvent::Started, this, &AMyP38::EnhancedFire);
-	Input->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &AMyP38::ProcessMovement);
+	if (Input)
+	{
+		Input->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AMyP38::EnhancedFire);
+		Input->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &AMyP38::ProcessMovement);
+	}
 }
 
 void AMyP38::EnhancedFire(const FInputActionValue& Value)

@@ -62,9 +62,9 @@ public:
 	UPROPERTY(BlueprintReadOnly,VisibleAnywhere,Category = Component)
 	TObjectPtr<UBoxComponent> Box;
 
-	UPROPERTY(VisibleAnywhere,Category = Input,BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category = Input)
 	TObjectPtr<class UInputAction> IA_Movement;
 
-	UPROPERTY(BlueprintReadWrite,VisibleAnywhere,Category = Input)
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category = Input)
 	TObjectPtr<class UInputAction> IA_Fire;
 };
