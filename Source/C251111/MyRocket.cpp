@@ -21,11 +21,7 @@ AMyRocket::AMyRocket()
 	Rocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rocket"));
 	Rocket->SetupAttachment(Box);
 	Rocket->AddRelativeRotation(FRotator(-90.0f,0,0));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Rocket(TEXT("/Script/Engine.StaticMesh'/Game/Mesh/SM_Rocket.SM_Rocket'"));
-	if (SM_Rocket.Succeeded())
-	{
-		Rocket->SetStaticMesh(SM_Rocket.Object);
-	}
+	
 
 	RocketMove = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("RocketMove"));
 	RocketMove->InitialSpeed = 1200.0f;
@@ -51,12 +47,18 @@ void AMyRocket::Tick(float DeltaTime)
 
 void AMyRocket::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UGameplayStatics::ApplyDamage(
-		OtherActor,
-		10.0f,
-		UGameplayStatics::GetPlayerController(GetWorld(),0),
-		this,
-		nullptr
-	);
+	if (OtherActor->ActorHasTag(TEXT("Target")))
+	{
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			10.0f,
+			UGameplayStatics::GetPlayerController(GetWorld(), 0),
+			this,
+			UDamageType::StaticClass()
+		);
+
+		Destroy();
+	}
+
 }
 

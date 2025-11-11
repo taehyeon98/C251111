@@ -18,7 +18,8 @@ class C251111_API AMyPC : public APlayerController
 public:
 	AMyPC();
 
-	virtual void BeginPlay() override;
+	virtual void OnPossess(APawn* aPawn) override;
+	virtual void OnUnPossess() override;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Input)
 	TObjectPtr<UInputMappingContext> InputMapping;

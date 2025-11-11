@@ -16,13 +16,33 @@ AMyPC::AMyPC()
 	}
 }
 
-void AMyPC::BeginPlay()
+void AMyPC::OnPossess(APawn* aPawn)
 {
-	if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
+	Super::OnPossess(aPawn);
+	if (IsLocalController())
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
 		{
+			if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+			{
 				InputSystem->AddMappingContext(InputMapping, 0);
+			}
 		}
 	}
 }
+
+void AMyPC::OnUnPossess()
+{
+	Super::OnUnPossess();
+	if (IsLocalController())
+	{
+		if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
+		{
+			if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+			{
+				InputSystem->RemoveMappingContext(InputMapping);
+			}
+		}
+	}
+}
+

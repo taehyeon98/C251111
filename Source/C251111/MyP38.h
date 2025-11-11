@@ -37,6 +37,15 @@ public:
 	void EnhancedFire(const FInputActionValue& Value);
 	void ProcessMovement(const FInputActionValue& Value);
 
+	UFUNCTION(BlueprintCallable, Category = Control)
+	void Fire();
+
+	UFUNCTION(BlueprintCallable, Category = Control)
+	void Rotate(float inPitch, float inRoll);
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Data)
+	TSubclassOf<class AMyRocket>RocketTemplate;
+
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Component)
 	TObjectPtr<UStaticMeshComponent> Body;

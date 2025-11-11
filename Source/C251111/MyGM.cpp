@@ -2,3 +2,8 @@
 
 
 #include "MyGM.h"
+
+AMyGM::AMyGM()
+{
+
+}

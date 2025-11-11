@@ -13,5 +13,6 @@ UCLASS()
 class C251111_API AMyGM : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	AMyGM();
 };

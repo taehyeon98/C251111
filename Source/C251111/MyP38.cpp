@@ -18,7 +18,7 @@
 // Sets default values
 AMyP38::AMyP38()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
@@ -48,7 +48,7 @@ AMyP38::AMyP38()
 	Spring->bEnableCameraRotationLag = true;
 	Spring->CameraLagMaxDistance = 100.0f;
 	Spring->CameraLagSpeed = 10.0f;
-	Spring->CameraRotationLagSpeed = 30.0f;
+	Spring->CameraRotationLagSpeed = 60.0f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(Spring);
@@ -56,7 +56,7 @@ AMyP38::AMyP38()
 	Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
 	Movement->MaxSpeed = 200.0f;
 
-	static ConstructorHelpers::FObjectFinder<UInputAction>Fire(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/IA_Fire.IA_Fire'"));
+	/*static ConstructorHelpers::FObjectFinder<UInputAction>Fire(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/IA_Fire.IA_Fire'"));
 	if (Fire.Succeeded())
 	{
 		IA_Fire = Fire.Object;
@@ -65,6 +65,12 @@ AMyP38::AMyP38()
 	if (Move.Succeeded())
 	{
 		IA_Movement = Move.Object;
+	}*/
+
+	ConstructorHelpers::FClassFinder<AMyRocket>BP_RocketTemplate(TEXT("/Script/Engine.Blueprint'/Game/CPP/BP_RocketCPP.BP_RocketCPP_C'"));
+	if (BP_RocketTemplate.Succeeded())
+	{
+		RocketTemplate = BP_RocketTemplate.Class;
 	}
 }
 
@@ -88,24 +94,37 @@ void AMyP38::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	// 여기에서 'ETriggerEvent' 열거형 값을 변경하여 원하는 트리거 이벤트를 바인딩할 수 있습니다.
-	if (Input)
+	//UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	//// 여기에서 'ETriggerEvent' 열거형 값을 변경하여 원하는 트리거 이벤트를 바인딩할 수 있습니다.
+	//if (Input)
+	//{
+	//	Input->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AMyP38::EnhancedFire);
+	//	Input->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &AMyP38::ProcessMovement);
+	//}
+}
+
+//void AMyP38::EnhancedFire(const FInputActionValue& Value)
+//{
+//	Fire();
+//}
+
+//void AMyP38::ProcessMovement(const FInputActionValue& Value)
+//{
+//	FVector2D Moving = Value.Get<FVector2D>();
+//	Moving = Moving * 60 * UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+//
+//	AddActorLocalRotation(FRotator(Moving.Y, 0, Moving.X));
+//}
+
+void AMyP38::Fire()
+{
+	if (RocketTemplate)
 	{
-		Input->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AMyP38::EnhancedFire);
-		Input->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &AMyP38::ProcessMovement);
+		GetWorld()->SpawnActor<AActor>(RocketTemplate, Arrow->K2_GetComponentToWorld());
 	}
 }
 
-void AMyP38::EnhancedFire(const FInputActionValue& Value)
+void AMyP38::Rotate(float inPitch,float inRoll)
 {
-	GetWorld()->SpawnActor<AMyRocket>(AMyRocket::StaticClass(), Arrow->K2_GetComponentToWorld());
-}
-
-void AMyP38::ProcessMovement(const FInputActionValue& Value)
-{
-	FVector2D Moving = Value.Get<FVector2D>();
-	Moving = Moving * 60 * UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-
-	AddActorLocalRotation(FRotator(Moving.Y, 0, Moving.X));
+	AddActorLocalRotation(FRotator(inPitch, 0, inRoll) * UGameplayStatics::GetWorldDeltaSeconds(GetWorld()) * 60.0f);
 }
